@@ -22,13 +22,14 @@ namespace thegame.Controllers
 
             if (userInput.ClickedPos != null)
             {
-                game.Score++;
-                var clickedCell = game.GetCellAtCoords(userInput.ClickedPos);
+                var clickedCell = repo.Field.GetCellAtCoords(userInput.ClickedPos);
                 var clickedColor = clickedCell.Type;
 
                 CellPainter.PaintAdjacentCellsOfColor(gameId,game.GetCellAtCoords(GamesRepo.PlayerPosition), clickedColor);
 
-                game.IsFinished = game.AllCellsAreOfOneColor();
+                CellPainter.PaintAdjacentCellsOfColor(repo.PlayerCell, clickedColor);
+
+                repo.Field.IsFinished = repo.Field.AllCellsAreOfOneColor();
             }
 
             return new ObjectResult(game);
