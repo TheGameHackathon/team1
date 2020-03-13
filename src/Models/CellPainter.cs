@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using thegame.Controllers;
+using thegame.GameData;
 using thegame.Services;
 
 namespace thegame.Models
@@ -14,9 +15,10 @@ namespace thegame.Models
             game.GetCellAtCoords(playerPosition).Type = color;
         }
 
-        public static void PaintAdjacentCellsOfColor(CellDto cell, string color)
+        public static void PaintAdjacentCellsOfColor(Guid gameId, CellDto cell, string color)
         {
-            var connected = GamesController.repo.Field.GetAllColorConnectedCells(cell);
+            GameMemory.Memory.TryGetValue(gameId, out var game);
+            var connected = game.Field.GetAllColorConnectedCells(cell);
             foreach (var one in connected)
             {
                 one.Type = color;

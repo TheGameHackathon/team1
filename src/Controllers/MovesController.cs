@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using thegame.GameData;
 using thegame.Models;
 using thegame.Services;
 
@@ -14,36 +15,36 @@ namespace thegame.Controllers
         [HttpPost]
         public IActionResult Moves(Guid gameId, [FromBody]UserInputForMovesPost userInput)
         {
-            var repo = GamesController.repo;
+            if (!GameMemory.Memory.TryGetValue(gameId, out GamesRepo repo))
+                return null;
+
+            var game = repo.Field;
 
             if (userInput.ClickedPos != null)
             {
                 var clickedCell = repo.Field.GetCellAtCoords(userInput.ClickedPos);
                 var clickedColor = clickedCell.Type;
+                if (clickedColor != repo.PlayerCell.Type)
+                    game.Score++;
 
-                if (GamesController.repo.PlayerCell.Type != clickedColor)
-                    repo.Field.Score++;
-
-                CellPainter.PaintAdjacentCellsOfColor(repo.PlayerCell, clickedColor);
-
-                repo.Field.IsFinished = repo.Field.AllCellsAreOfOneColor();
+                CellPainter.PaintAdjacentCellsOfColor(gameId, repo.PlayerCell, clickedColor);
             }
 
             if (userInput.KeyPressed == 'I')
             {
-                var pickedColor = new AIPlayer(repo.PlayerCell).PickColor(repo.Field.Cells);
-                CellPainter.PaintAdjacentCellsOfColor(repo.PlayerCell, pickedColor);
-                repo.Field.Score++;
+                string color = new AIPlayer(repo.PlayerCell).PickColor(repo.Field.Cells);
+
+                CellPainter.PaintAdjacentCellsOfColor(gameId, repo.PlayerCell, color);
+                game.Score++;
             }
 
             if (userInput.KeyPressed == 'X')
             {
-                // Press X to Win
-                repo.Field.IsFinished = true;
+                game.IsFinished = true;
             }
 
-            GamesController.repo.Field = repo.Field;
-            return new ObjectResult(repo.Field);
+            repo.Field.IsFinished = game.IsFinished || game.AllCellsAreOfOneColor();
+            return new ObjectResult(game);
         }
     }
 }
