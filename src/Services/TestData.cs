@@ -12,16 +12,14 @@ namespace thegame.Services
             var height = 8;
             var numberOfColors = 5;
 
-            CellDto[] testCells = new CellDto[width*height];
+            CellDto[] testCells = new CellDto[width * height];
             Random random = new Random();
-            for (int i = 0; i < width*height; i++)
+            for (int i = 0; i < width * height; i++)
             {
-                testCells[i] = new CellDto((i+1).ToString(), new Vec(i%width, i/width), "color" + random.Next(0,numberOfColors-1), "", 0);
+                testCells[i] = new CellDto(i.ToString(), new Vec(i % width, i / width), "color" + random.Next(0, numberOfColors), "", 0);
             }
 
-            return new GameDto(testCells, true, true, width, height, Guid.Empty, movingObjectPosition.X == 0, movingObjectPosition.Y);
-        }
-
-        
+            return new GameDto(testCells, true, true, width, height, Guid.NewGuid(), movingObjectPosition.X == 0, movingObjectPosition.Y);
+        }        
     }
 }

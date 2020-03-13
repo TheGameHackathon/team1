@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace thegame.Models
 {
     public class CellDto
@@ -24,5 +26,10 @@ namespace thegame.Models
         public int ZIndex;
         public string Type;
         public string Content;
+    }
+
+    public List<CellDto> GetAdjacentCellsOfColor(CellDto startCell, string color)
+    {
+        
     }
 }

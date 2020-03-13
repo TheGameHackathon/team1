@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using thegame.Models;
@@ -9,27 +10,28 @@ namespace thegame.Controllers
     [Route("api/games/{gameId}/moves")]
     public class MovesController : Controller
     {
-        private static GamesRepo repo = new GamesRepo();
 
         [HttpPost]
         public IActionResult Moves(Guid gameId, [FromBody]UserInputForMovesPost userInput)
         {
-            var game = repo.Field;
+            var game = GamesRepo.Field;
 
-            string clickedColor;
             if (userInput.ClickedPos != null)
             {
-                var clickedCell = game.GetCellAtCoords(userInput.ClickedPos.X, userInput.ClickedPos.Y);
-                clickedColor = clickedCell.Type;
+                var clickedCell = game.GetCellAtCoords(userInput.ClickedPos);
+                var clickedColor = clickedCell.Type;
 
+                //CellPainter.PaintOnlyPlayerCell(game, GamesRepo.PlayerPosition, clickedColor);
+
+                var cells = new List<CellDto>();
                 foreach (var cell in game.Cells.Where(c => c.Type != clickedColor))
                 {
-                    cell.Type = clickedColor;
-                    cell.Content = "*";
+                    cells.Add(cell);
                 }
+                CellPainter.PaintCellsList(cells, clickedColor, "*");
             }
 
-            repo.Field = game;
+            GamesRepo.Field = game;
             return new ObjectResult(game);
         }
     }
