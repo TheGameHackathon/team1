@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using thegame.Controllers;
 using thegame.Services;
 
 namespace thegame.Models
@@ -99,7 +100,7 @@ namespace thegame.Models
 
         public bool AllCellsAreOfOneColor()
         {
-            string color = GetCellAtCoords(GamesRepo.PlayerPosition).Type;
+            string color = GamesController.repo.PlayerCell.Type;
             return Cells.All(c => c.Type == color);
         }
     }
