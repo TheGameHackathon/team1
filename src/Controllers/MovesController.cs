@@ -25,13 +25,18 @@ namespace thegame.Controllers
                 var clickedCell = repo.Field.GetCellAtCoords(userInput.ClickedPos);
                 var clickedColor = clickedCell.Type;
 
-                CellPainter.PaintAdjacentCellsOfColor(gameId,game.GetCellAtCoords(GamesRepo.PlayerPosition), clickedColor);
+                CellPainter.PaintAdjacentCellsOfColor(gameId,repo.PlayerCell, clickedColor);
 
-                CellPainter.PaintAdjacentCellsOfColor(repo.PlayerCell, clickedColor);
-
-                repo.Field.IsFinished = repo.Field.AllCellsAreOfOneColor();
             }
 
+            if (userInput.KeyPressed == 'I')
+            {
+                string color = new AIPlayer(repo.PlayerCell).PickColor(repo.Field.Cells);
+
+                CellPainter.PaintAdjacentCellsOfColor(gameId, repo.PlayerCell, color);
+            }
+
+            repo.Field.IsFinished = repo.Field.AllCellsAreOfOneColor();
             return new ObjectResult(game);
         }
     }
