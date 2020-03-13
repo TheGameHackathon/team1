@@ -11,7 +11,7 @@ namespace thegame.should
         [SetUp]
         public void Setup()
         {
-            _cells = TestData.AGameDto(new Vec(1, 1));
+            _cells = TestData.AGameDto(5,5,5);
         } 
 
         private GameDto _cells;
