@@ -57,11 +57,45 @@ namespace thegame.Models
             var right = GetCellAtCoords(cell.Pos.X+1, cell.Pos.Y);
             var left = GetCellAtCoords(cell.Pos.X-1, cell.Pos.Y);
             if(up != null && up.Type == cell.Type) neighbours.Add(up);
-            if(down != null && up.Type == cell.Type) neighbours.Add(down);
-            if(right != null && up.Type == cell.Type) neighbours.Add(right);
-            if(left != null && up.Type == cell.Type) neighbours.Add(left);
+            if(down != null && down.Type == cell.Type) neighbours.Add(down);
+            if(right != null && right.Type == cell.Type) neighbours.Add(right);
+            if(left != null && left.Type == cell.Type) neighbours.Add(left);
             return neighbours;
         }
+
+        public List<CellDto> GetAllColorConnectedCells(CellDto cell)
+        {
+            HashSet<CellDto> visited = new HashSet<CellDto>();
+            HashSet<CellDto> connected = new HashSet<CellDto>();
+            connected.Add(cell);
+            return Recursive(cell, visited, connected);
+        }
+        private List<CellDto> Recursive(CellDto cell, HashSet<CellDto> visited, HashSet<CellDto> connected)
+        {
+            List<CellDto> cells;
+            if (GetAllNeighboursSameColor(cell).Count == 0)
+            {
+                cells = new List<CellDto>();
+                cells.Add(cell);
+                return cells;
+            }
+            else
+            {
+                cells = GetAllNeighboursSameColor(cell);
+                foreach (var bruh in cells)
+                {
+                    connected.Add(bruh);
+                    if (!visited.Contains(bruh))
+                    {
+                        visited.Add(bruh);
+                        Recursive(bruh, visited, connected);
+                    }
+                }
+            }
+
+            return connected.ToList();
+        }
+
 
     }
 }
