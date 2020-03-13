@@ -24,14 +24,16 @@ namespace thegame.Controllers
                 if (GamesController.repo.PlayerCell.Type != clickedColor)
                     repo.Field.Score++;
 
-                CellPainter.PaintAdjacentCellsOfColor(repo.Field.GetCellAtCoords(repo.PlayerPosition), clickedColor);
+                CellPainter.PaintAdjacentCellsOfColor(repo.PlayerCell, clickedColor);
 
                 repo.Field.IsFinished = repo.Field.AllCellsAreOfOneColor();
             }
 
             if (userInput.KeyPressed == 'I')
             {
-
+                var pickedColor = new AIPlayer(repo.PlayerCell).PickColor(repo.Field.Cells);
+                CellPainter.PaintAdjacentCellsOfColor(repo.PlayerCell, pickedColor);
+                repo.Field.Score++;
             }
 
             if (userInput.KeyPressed == 'X')

@@ -15364,23 +15364,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Toint\\.nuget\\packages\\": {},
+    "C:\\Users\\Артём\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Git\\team1\\thegame.should\\thegame.should.csproj",
+      "projectUniqueName": "C:\\team1\\thegame.should\\thegame.should.csproj",
       "projectName": "thegame.should",
-      "projectPath": "D:\\Git\\team1\\thegame.should\\thegame.should.csproj",
-      "packagesPath": "C:\\Users\\Toint\\.nuget\\packages\\",
-      "outputPath": "D:\\Git\\team1\\thegame.should\\obj\\",
+      "projectPath": "C:\\team1\\thegame.should\\thegame.should.csproj",
+      "packagesPath": "C:\\Users\\Артём\\.nuget\\packages\\",
+      "outputPath": "C:\\team1\\thegame.should\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\Toint\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Артём\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -15393,8 +15393,8 @@
       "frameworks": {
         "netcoreapp2.1": {
           "projectReferences": {
-            "D:\\Git\\team1\\src\\thegame.csproj": {
-              "projectPath": "D:\\Git\\team1\\src\\thegame.csproj"
+            "C:\\team1\\src\\thegame.csproj": {
+              "projectPath": "C:\\team1\\src\\thegame.csproj"
             }
           }
         }
