@@ -16,7 +16,7 @@ namespace thegame.Services
             Random random = new Random();
             for (int i = 0; i < width*height; i++)
             {
-                testCells[i] = new CellDto((i+1).ToString(), new Vec(i%width, i/width), "color" + random.Next(0,numberOfColors-1), "", 0);
+                testCells[i] = new CellDto(i.ToString(), new Vec(i%width, i/width), "color" + random.Next(numberOfColors), "", 0);
             }
 
             return new GameDto(testCells, true, true, width, height, Guid.Empty, movingObjectPosition.X == 0, movingObjectPosition.Y);

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace thegame.Models
@@ -34,5 +35,33 @@ namespace thegame.Models
         {
             return GetCellAtCoords(coords.X, coords.Y);
         }
+        public List<CellDto> GetAllNeighbours(CellDto cell)
+        {
+            List<CellDto> neighbours = new List<CellDto>();
+            var up = GetCellAtCoords(cell.Pos.X, cell.Pos.Y+1);
+            var down = GetCellAtCoords(cell.Pos.X, cell.Pos.Y-1);
+            var right = GetCellAtCoords(cell.Pos.X+1, cell.Pos.Y);
+            var left = GetCellAtCoords(cell.Pos.X-1, cell.Pos.Y);
+            if(up != null) neighbours.Add(up);
+            if(down != null) neighbours.Add(down);
+            if(right != null) neighbours.Add(right);
+            if(left != null) neighbours.Add(left);
+            return neighbours;
+        }
+
+        public List<CellDto> GetAllNeighboursSameColor(CellDto cell)
+        {
+            List<CellDto> neighbours = new List<CellDto>();
+            var up = GetCellAtCoords(cell.Pos.X, cell.Pos.Y+1);
+            var down = GetCellAtCoords(cell.Pos.X, cell.Pos.Y-1);
+            var right = GetCellAtCoords(cell.Pos.X+1, cell.Pos.Y);
+            var left = GetCellAtCoords(cell.Pos.X-1, cell.Pos.Y);
+            if(up != null && up.Type == cell.Type) neighbours.Add(up);
+            if(down != null && up.Type == cell.Type) neighbours.Add(down);
+            if(right != null && up.Type == cell.Type) neighbours.Add(right);
+            if(left != null && up.Type == cell.Type) neighbours.Add(left);
+            return neighbours;
+        }
+
     }
 }
