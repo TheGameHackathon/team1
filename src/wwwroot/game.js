@@ -2,6 +2,8 @@
 const startMessage = document.getElementsByClassName("startMessage")[0];
 const startgameOverlay = document.getElementsByClassName("start")[0];
 const scoreElement = document.getElementsByClassName("scoreContainer")[0];
+const iHint = document.getElementsByClassName("iHintContainer")[0];
+const xHint = document.getElementsByClassName("xHintContainer")[0];
 
 const easyButton = document.getElementsByClassName("easyButton")[0];
 const mediumButton = document.getElementsByClassName("mediumButton")[0];
@@ -62,8 +64,8 @@ function renderField(game) {
 
 function updateField(game) {
     if (game) {
-        scoreElement.innerText = `Your score: ${game.score}`;
-        startMessage.innerText = `Your score: ${game.score}. Again?`;
+        scoreElement.innerText = `Number of turns: ${game.score}`;
+        startMessage.innerText = `Number of turns: ${game.score}. Again?`;
     }
     setTimeout(
         () => {

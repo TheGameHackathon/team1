@@ -14,23 +14,36 @@ namespace thegame.Controllers
         [HttpPost]
         public IActionResult Moves(Guid gameId, [FromBody]UserInputForMovesPost userInput)
         {
-            var game = GamesController.repo.Field;
+            var repo = GamesController.repo;
 
             if (userInput.ClickedPos != null)
             {
-                var clickedCell = game.GetCellAtCoords(userInput.ClickedPos);
+                var clickedCell = repo.Field.GetCellAtCoords(userInput.ClickedPos);
                 var clickedColor = clickedCell.Type;
 
                 if (GamesController.repo.PlayerCell.Type != clickedColor)
-                    game.Score++;
+                    repo.Field.Score++;
 
-                CellPainter.PaintAdjacentCellsOfColor(game.GetCellAtCoords(GamesRepo.PlayerPosition), clickedColor);
+                CellPainter.PaintAdjacentCellsOfColor(repo.PlayerCell, clickedColor);
 
-                game.IsFinished = game.AllCellsAreOfOneColor();
+                repo.Field.IsFinished = repo.Field.AllCellsAreOfOneColor();
             }
 
-            GamesController.repo.Field = game;
-            return new ObjectResult(game);
+            if (userInput.KeyPressed == 'I')
+            {
+                var pickedColor = new AIPlayer(repo.PlayerCell).PickColor(repo.Field.Cells);
+                CellPainter.PaintAdjacentCellsOfColor(repo.PlayerCell, pickedColor);
+                repo.Field.Score++;
+            }
+
+            if (userInput.KeyPressed == 'X')
+            {
+                // Press X to Win
+                repo.Field.IsFinished = true;
+            }
+
+            GamesController.repo.Field = repo.Field;
+            return new ObjectResult(repo.Field);
         }
     }
 }
