@@ -18,7 +18,14 @@ namespace thegame.Services
         public string PickColor(CellDto[] field)
         {
             Random random = new Random();
-            return ("color" + random.Next(5));
+
+            var color = "color" + random.Next(5);
+
+            while (color == _startPosition.Type ||
+                !field.Any(c => c.Type == color))
+                color = "color" + random.Next(5);
+
+            return color;
         }
 
         private List<CellDto> GetNeighborOtherColorCells(CellDto[] field)
