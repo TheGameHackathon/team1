@@ -4,14 +4,32 @@ using thegame.Services;
 
 namespace thegame.Controllers
 {
-    [Route("api/games")]
     public class GamesController : Controller
     {
+        public static GamesRepo repo;
+
+        [Route("api/games/easy")]
         [HttpPost]
-        public IActionResult Index()
+        public IActionResult StartEasyGame()
         {
-            GamesRepo.UpdateMap();
-            return new ObjectResult(GamesRepo.Field);
+            repo = new GamesRepo(5, 3, 3);
+            return new ObjectResult(repo.Field);
+        }
+
+        [Route("api/games/medium")]
+        [HttpPost]
+        public IActionResult StartMediumGame()
+        {
+            repo = new GamesRepo(10, 8, 4);
+            return new ObjectResult(repo.Field);
+        }
+
+        [Route("api/games/hard")]
+        [HttpPost]
+        public IActionResult StartHardGame()
+        {
+            repo = new GamesRepo(32, 18, 5);
+            return new ObjectResult(repo.Field);
         }
     }
 }

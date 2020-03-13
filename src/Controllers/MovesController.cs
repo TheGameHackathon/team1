@@ -14,23 +14,21 @@ namespace thegame.Controllers
         [HttpPost]
         public IActionResult Moves(Guid gameId, [FromBody]UserInputForMovesPost userInput)
         {
-            var game = GamesRepo.Field;
+            var game = GamesController.repo.Field;
 
             if (userInput.ClickedPos != null)
             {
+                game.Score++;
                 var clickedCell = game.GetCellAtCoords(userInput.ClickedPos);
                 var clickedColor = clickedCell.Type;
 
-                CellPainter.PaintAdjacentCellsOfColor(GamesRepo.Field.GetCellAtCoords(GamesRepo.PlayerPosition), clickedColor);
+                CellPainter.PaintAdjacentCellsOfColor(game.GetCellAtCoords(GamesRepo.PlayerPosition), clickedColor);
+
+                game.IsFinished = game.AllCellsAreOfOneColor();
             }
 
-            GamesRepo.Field = game;
+            GamesController.repo.Field = game;
             return new ObjectResult(game);
-        }
-
-        private void PaintOnlyPlayerCell(GameDto game, Vec playerPosition, string color)
-        {
-            game.GetCellAtCoords(playerPosition).Type = color;
         }
     }
 }

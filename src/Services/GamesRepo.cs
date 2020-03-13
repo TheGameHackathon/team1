@@ -7,13 +7,25 @@ namespace thegame.Services
 {
     public class GamesRepo
     {
-        public static GameDto Field { get; set; } = TestData.AGameDto(new Vec(1, 1));
+        public GameDto Field { get; set; }
         public static Vec PlayerPosition = new Vec(0, 0);
 
-        public static void UpdateMap()
+        private int width;
+        private int height;
+        private int numberOfColors;
+
+        public GamesRepo(int width, int height, int numberOfColors)
         {
-            Field = TestData.AGameDto(new Vec(1, 1));
+            Field = TestData.AGameDto(width, height, numberOfColors);
+
+            this.width = width;
+            this.height = height;
+            this.numberOfColors = numberOfColors;
+        }
+
+        public void UpdateMap()
+        {
+            Field = TestData.AGameDto(width, height, numberOfColors);
         }
     }
-
 }
