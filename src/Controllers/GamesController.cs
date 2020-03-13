@@ -10,6 +10,7 @@ namespace thegame.Controllers
         [HttpPost]
         public IActionResult Index()
         {
+            GamesRepo.UpdateMap();
             return new ObjectResult(GamesRepo.Field);
         }
     }
