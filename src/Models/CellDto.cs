@@ -28,8 +28,5 @@ namespace thegame.Models
         public string Content;
     }
 
-    public List<CellDto> GetAdjacentCellsOfColor(CellDto startCell, string color)
-    {
-        
-    }
+
 }

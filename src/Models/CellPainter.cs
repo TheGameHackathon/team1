@@ -24,26 +24,10 @@ namespace thegame.Models
 
         public static void PaintAdjacentCellsOfColor(CellDto cell, string color)
         {
-            string oldColor = cell.Type;
-            cell.Type = color;
-            for (int dx = -1; dx <= 1; dx++)
+            var connected = GamesRepo.Field.GetAllColorConnectedCells(cell);
+            foreach (var one in connected)
             {
-                for (int dy = -1; dy <= 1; dy++)
-                {
-                    if (Math.Abs(dx) + Math.Abs(dy) == 1)
-                    {
-                        int nextX = cell.Pos.X + dx;
-                        int nextY = cell.Pos.Y + dy;
-                        if (nextX >= 0 && nextX < GamesRepo.Field.Width && nextY >= 0 && nextY < GamesRepo.Field.Height)
-                        {
-                            var nextCell = GamesRepo.Field.GetCellAtCoords(nextX, nextY);
-                            if (nextCell.Type == oldColor)
-                            {
-                                PaintAdjacentCellsOfColor(nextCell, color);
-                            }
-                        }
-                    }
-                }
+                one.Type = color;
             }
         }
     }
