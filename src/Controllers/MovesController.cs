@@ -34,5 +34,10 @@ namespace thegame.Controllers
             GamesRepo.Field = game;
             return new ObjectResult(game);
         }
+
+        private void PaintOnlyPlayerCell(GameDto game, Vec playerPosition, string color)
+        {
+            game.GetCellAtCoords(playerPosition).Type = color;
+        }
     }
 }
