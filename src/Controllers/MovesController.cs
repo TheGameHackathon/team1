@@ -23,12 +23,14 @@ namespace thegame.Controllers
 
                 //CellPainter.PaintOnlyPlayerCell(game, GamesRepo.PlayerPosition, clickedColor);
 
-                var cells = new List<CellDto>();
-                foreach (var cell in game.Cells.Where(c => c.Type != clickedColor))
-                {
-                    cells.Add(cell);
-                }
-                CellPainter.PaintCellsList(cells, clickedColor, "*");
+                //var cells = new List<CellDto>();
+                //foreach (var cell in game.Cells.Where(c => c.Type != clickedColor))
+                //{
+                //    cells.Add(cell);
+                //}
+                //CellPainter.PaintCellsList(cells, clickedColor, "*");
+
+                CellPainter.PaintAdjacentCellsOfColor(GamesRepo.Field.GetCellAtCoords(GamesRepo.PlayerPosition), clickedColor);
             }
 
             GamesRepo.Field = game;
