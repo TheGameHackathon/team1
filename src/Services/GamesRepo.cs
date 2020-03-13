@@ -8,7 +8,8 @@ namespace thegame.Services
     public class GamesRepo
     {
         public GameDto Field { get; set; }
-        public static Vec PlayerPosition = new Vec(0, 0);
+        public static Vec PlayerPosition { get; } = new Vec(0, 0);
+        public CellDto PlayerCell { get => Field.GetCellAtCoords(PlayerPosition); }
 
         private int width;
         private int height;

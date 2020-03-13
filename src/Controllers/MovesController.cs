@@ -18,9 +18,11 @@ namespace thegame.Controllers
 
             if (userInput.ClickedPos != null)
             {
-                game.Score++;
                 var clickedCell = game.GetCellAtCoords(userInput.ClickedPos);
                 var clickedColor = clickedCell.Type;
+
+                if (GamesController.repo.PlayerCell.Type != clickedColor)
+                    game.Score++;
 
                 CellPainter.PaintAdjacentCellsOfColor(game.GetCellAtCoords(GamesRepo.PlayerPosition), clickedColor);
 
