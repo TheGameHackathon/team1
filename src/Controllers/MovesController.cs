@@ -24,9 +24,10 @@ namespace thegame.Controllers
             {
                 var clickedCell = repo.Field.GetCellAtCoords(userInput.ClickedPos);
                 var clickedColor = clickedCell.Type;
+                if (clickedColor != repo.PlayerCell.Type)
+                    game.Score++;
 
-                CellPainter.PaintAdjacentCellsOfColor(gameId,repo.PlayerCell, clickedColor);
-
+                CellPainter.PaintAdjacentCellsOfColor(gameId, repo.PlayerCell, clickedColor);
             }
 
             if (userInput.KeyPressed == 'I')
@@ -34,9 +35,15 @@ namespace thegame.Controllers
                 string color = new AIPlayer(repo.PlayerCell).PickColor(repo.Field.Cells);
 
                 CellPainter.PaintAdjacentCellsOfColor(gameId, repo.PlayerCell, color);
+                game.Score++;
             }
 
-            repo.Field.IsFinished = repo.Field.AllCellsAreOfOneColor();
+            if (userInput.KeyPressed == 'X')
+            {
+                game.IsFinished = true;
+            }
+
+            repo.Field.IsFinished = game.IsFinished || game.AllCellsAreOfOneColor();
             return new ObjectResult(game);
         }
     }

@@ -11,9 +11,6 @@ namespace thegame.Services
         public Vec PlayerPosition { get; } = new Vec(0, 0);
         public CellDto PlayerCell { get => Field.GetCellAtCoords(PlayerPosition); }
 
-        public Vec AIPosition { get => new Vec(width - 1, height - 1); }
-        public CellDto AICell { get => Field.GetCellAtCoords(AIPosition); }
-
         private int width;
         private int height;
         private int numberOfColors;
