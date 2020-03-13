@@ -62,8 +62,8 @@ function renderField(game) {
 
 function updateField(game) {
     if (game) {
-        scoreElement.innerText = `Your score: ${game.score}`;
-        startMessage.innerText = `Your score: ${game.score}. Again?`;
+        scoreElement.innerText = `Number of turns: ${game.score}`;
+        startMessage.innerText = `Number of turns: ${game.score}. Again?`;
     }
     setTimeout(
         () => {
