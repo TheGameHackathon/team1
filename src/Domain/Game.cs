@@ -5,8 +5,9 @@ namespace Domain
 {
     public class Game
     {
-        public void SetUp(IRandomCellCreator generator)
+        public void SetUp()
         {
+            var generator = new RandomCellCreator();
             Field = GenerateField(GenerateOneDimensionalField());
 
             try
@@ -37,6 +38,7 @@ namespace Domain
             IsFinished = false;
             Score = 0;
             Field = null;
+            SetUp();
         }
 
         public Cell[] Cells
