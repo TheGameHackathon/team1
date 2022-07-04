@@ -120,7 +120,7 @@ namespace Domain
                     {
                         var rightCell = Field[cell.Pos.X + dxdy.X, cell.Pos.Y + dxdy.Y];
 
-                        if (!cell.IsMergeableWith(rightCell)) continue;
+                        if (!cell.IsMergableWith(rightCell)) continue;
 
                         rightCell.Value = cell.Value + rightCell.Value;
                         Score += rightCell.Value;
@@ -161,7 +161,7 @@ namespace Domain
                             return false;
                         }
 
-                        if (cell.IsMergeableWith(neighbourCell))
+                        if (cell.IsMergableWith(neighbourCell))
                         {
                             return false;
                         }

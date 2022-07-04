@@ -17,7 +17,7 @@ namespace Domain
 
         public bool IsEmpty => Value == 0;
 
-        public bool IsMergeableWith(Cell other) => Value == other.Value;
+        public bool IsMergableWith(Cell other) => Value == other.Value;
 
         public bool HasNeighbour(Cell other) => !other.IsEmpty;
     }
