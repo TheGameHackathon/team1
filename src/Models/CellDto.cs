@@ -20,6 +20,11 @@ namespace thegame.Models
             ZIndex = zIndex;
         }
 
+        public CellDto()
+        {
+            
+        }
+
         public string Id { get; set; }
         public VectorDto Pos { get; set; }
         public int ZIndex { get; set; }
