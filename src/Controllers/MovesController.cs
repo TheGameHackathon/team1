@@ -31,7 +31,7 @@ namespace thegame.Controllers
             if (gameEntity is null)
                 return NotFound();
 
-            gameEntity.MoveCells(userInput.KeyPressed);
+            gameEntity.MoveCells(userInput.keyPressed);
             _gamesRepository.Update(gameEntity);
 
             var gameDto = _mapper.Map<GameDto>(gameEntity);
