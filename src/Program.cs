@@ -29,6 +29,7 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.CreateMap<Game, GameDto>();
 }, Array.Empty<Assembly>());
 builder.Services.AddSingleton<IGamesRepository, GamesRepository>();
+builder.Services.AddScoped<IBot, LeftUpBot>();
 
 var app = builder.Build();
 
