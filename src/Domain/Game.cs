@@ -34,5 +34,34 @@ namespace Domain
         public Guid Id { get; set; }
         public bool IsFinished { get; set; }
         public int Score { get; set; }
+
+        public void MoveCells(int direction)
+        {
+            foreach (var cell in Cells)
+            {
+                switch (direction)
+                {
+                    case 37:
+                        MoveCell(cell, -1, 0);
+                        break;
+                    case 38:
+                        MoveCell(cell, 0, 1);
+                        break;
+                    case 39:
+                        MoveCell(cell, 1, 0);
+                        break;
+                    case 40:
+                        MoveCell(cell, 0, -1);
+                        break;
+                }
+            }
+
+            
+        }
+        
+        private void MoveCell(Cell cell, int dx, int dy)
+        {
+            cell.Pos = new Vector() {X = cell.Pos.X + dx, Y = cell.Pos.Y + dy};
+        }
     }
 }
