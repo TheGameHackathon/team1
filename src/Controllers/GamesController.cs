@@ -1,4 +1,5 @@
 using System;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using thegame.Models;
 using thegame.Services;
@@ -10,15 +11,19 @@ namespace thegame.Controllers
     public class GamesController : Controller
     {
         private readonly IGamesRepository gamesRepository;
-        public GamesController(IGamesRepository gamesRepository)
+        private readonly IMapper mapper;
+        public GamesController(IGamesRepository gamesRepository, IMapper mapper)
         {
             this.gamesRepository = gamesRepository;
+            this.mapper = mapper;
         }
         
         [HttpPost]
         public IActionResult Index()
         {
-            return Ok(gamesRepository.GetOrCreate(Guid.NewGuid()));
+            var game = gamesRepository.GetOrCreate(Guid.NewGuid());
+            var gameDto = mapper.Map<GameDto>(game);
+            return Ok(gameDto);
         }
     }
 }
