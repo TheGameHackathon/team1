@@ -15,10 +15,10 @@ public class RandomCellCreator : IRandomCellCreator
 
         var newCellPos = GetPosOfRandomEmptyCell(game);
         var random = new Random();
-        var newContent = random.Next(1, 3);
+        var newContent = random.Next(1, 6) > 1? 2: 4;
 
         var oldCell = _cells[newCellPos.X, newCellPos.Y];
-        var newCell = new Cell(oldCell.Id, oldCell.Pos, newContent * 2);
+        var newCell = new Cell(oldCell.Id, oldCell.Pos, newContent);
         
         game.Field[newCellPos.X, newCellPos.Y] = newCell;
     }
