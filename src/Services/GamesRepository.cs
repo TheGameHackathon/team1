@@ -28,7 +28,7 @@ namespace thegame.Services
                 return Clone(id, game);
             }
 
-            var entity = new Game(Guid.NewGuid());
+            var entity = new Game(id);
             entities[entity.Id] = entity;
             return Clone(id, entity);
         }

@@ -21,20 +21,20 @@ namespace thegame.Controllers
         } 
         
         [HttpPost]
-        public IActionResult Moves(Guid gameId, [FromBody] UserInputDto userInput)
+        public IActionResult Moves([FromRoute] Guid gameId, [FromBody] UserInputDto userInput)
         {
             if (gameId == Guid.Empty)
                 return BadRequest();
 
-            var gameEnity = _gamesRepository.FindGameById(gameId);
+            var gameEntity = _gamesRepository.FindGameById(gameId);
 
-            if (gameEnity is null)
+            if (gameEntity is null)
                 return NotFound();
 
-            gameEnity.MoveCells(userInput.KeyPressed);
-            _gamesRepository.Update(gameEnity);
+            gameEntity.MoveCells(userInput.KeyPressed);
+            _gamesRepository.Update(gameEntity);
 
-            var gameDto = _mapper.Map<GameDto>(gameEnity);
+            var gameDto = _mapper.Map<GameDto>(gameEntity);
             
             return Ok(gameDto);
         }

@@ -22,7 +22,7 @@ namespace Domain
                 throw new Exception("Game is over");
             }
         }
-        public Game() : this(4, 4, Guid.NewGuid())
+        public Game()
         {
         }
 
@@ -32,7 +32,7 @@ namespace Domain
 
         public Game(int width, int height, Guid id)
         {
-            MonitorKeyboard = false;
+            MonitorKeyboard = true;
             MonitorMouseClicks = false;
             Width = width;
             Height = height;
