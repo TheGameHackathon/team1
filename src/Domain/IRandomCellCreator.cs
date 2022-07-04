@@ -1,9 +1,10 @@
 using thegame.Models;
 
-namespace Domain;
-
-public interface IRandomCellCreator
+namespace Domain
 {
-    void CreateAndAddRandomCellToGame(Game game);
-    Vector GetPosOfRandomEmptyCell(Game game);
+    public interface IRandomCellCreator
+    {
+        void CreateAndAddRandomCellToGame(Game game);
+        Vector GetPosOfRandomEmptyCell(Game game);
+    }
 }
