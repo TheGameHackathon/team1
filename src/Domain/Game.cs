@@ -106,6 +106,8 @@ namespace Domain
                 {
                     var cell = Field[i, j];
 
+                    if (cell.Value == 0) continue;
+                    
                     while (CanBeMoved(cell, dxdy.X, dxdy.Y))
                     {
                         MoveCell(cell, dxdy.X, dxdy.Y);
@@ -132,9 +134,9 @@ namespace Domain
             return direction switch
             {
                 37 => new Vector() {X = -1, Y = 0},
-                38 => new Vector() {X = 0, Y = 1},
+                38 => new Vector() {X = 0, Y = -1},
                 39 => new Vector() {X = 1, Y = 0},
-                40 => new Vector() {X = 0, Y = -1},
+                40 => new Vector() {X = 0, Y = 1},
                 _ => new Vector() {X = 0, Y = 0}
             };
         }
@@ -143,25 +145,26 @@ namespace Domain
         {
             return direction switch
             {
-                37 => (Enumerable.Range(0, Width - 1), Enumerable.Range(0, Height - 1)),
-                39 => (Enumerable.Range(Width - 1, 0), Enumerable.Range(0, Height - 1)),
-                38 => (Enumerable.Range(0, Width - 1), Enumerable.Range(0, Height - 1)),
-                40 => (Enumerable.Range(0, Width - 1), Enumerable.Range(Height - 1, 0)),
+                
+                37 => (Enumerable.Range(0, Width), Enumerable.Range(0, Height)),
+                39 => (Enumerable.Range(0, Width).Reverse(), Enumerable.Range(0, Height)),
+                38 => (Enumerable.Range(0, Width), Enumerable.Range(0, Height)),
+                40 => (Enumerable.Range(0, Width), Enumerable.Range(0, Height).Reverse()),
                 _ => (Enumerable.Empty<int>(), Enumerable.Empty<int>())
             };
         }
         
         private bool CanBeMoved(Cell cell, int dx, int dy)
         {
-            return !(InBound(new Vector() {X = cell.Pos.X + dx, Y = cell.Pos.Y + dy}) || 
-                     cell.HasNeighbour(Field[cell.Pos.X + dx, cell.Pos.Y + dy]));
+            return InBound(new Vector() {X = cell.Pos.X + dx, Y = cell.Pos.Y + dy}) && 
+                     !cell.HasNeighbour(Field[cell.Pos.X + dx, cell.Pos.Y + dy]);
         }
 
         private bool InBound(Vector cellPos)
         {
             return !(cellPos.X < 0 ||
                      cellPos.X >= Width ||
-                     cellPos.Y <= 0 ||
+                     cellPos.Y < 0 ||
                      cellPos.Y >= Height);
         }
 
