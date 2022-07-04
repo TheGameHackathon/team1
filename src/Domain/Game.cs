@@ -53,15 +53,23 @@ namespace Domain
                     case 40:
                         MoveCell(cell, 0, -1);
                         break;
+                    default:
+                        MoveCell(cell, 0, 0);
+                        break;
                 }
             }
-
-            
         }
         
         private void MoveCell(Cell cell, int dx, int dy)
         {
-            cell.Pos = new Vector() {X = cell.Pos.X + dx, Y = cell.Pos.Y + dy};
+            var newPos = new Vector() {X = cell.Pos.X + dx, Y = cell.Pos.Y + dy};
+
+            if (cell.Pos.X + dx < 0 || cell.Pos.Y >= Width || cell.Pos.Y <= 0 || cell.Pos.Y >= Height)
+            {
+                newPos = cell.Pos;
+            }
+
+            cell.Pos = newPos;
         }
     }
 }

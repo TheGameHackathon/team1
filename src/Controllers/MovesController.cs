@@ -20,14 +20,14 @@ namespace thegame.Controllers
         [HttpPost]
         public IActionResult Moves(Guid gameId, [FromBody] UserInputDto userInput)
         {
+            if (gameId == Guid.Empty)
+                return BadRequest();
+
             var currentGameState = _gamesRepository.FindGameById(gameId);
 
             if (currentGameState is null)
                 return NotFound();
-            
-            if (gameId == Guid.Empty)
-                return BadRequest();
-            
+
             currentGameState.MoveCells(userInput.KeyPressed);
             _gamesRepository.Update(currentGameState);
             
