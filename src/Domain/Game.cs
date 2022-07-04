@@ -105,6 +105,8 @@ namespace Domain
                 {
                     var cell = Field[i, j];
 
+                    if (cell.Value == 0) continue;
+                    
                     while (CanBeMoved(cell, dxdy.X, dxdy.Y))
                     {
                         MoveCell(cell, dxdy.X, dxdy.Y);
@@ -160,7 +162,7 @@ namespace Domain
         {
             return !(cellPos.X < 0 ||
                      cellPos.X >= Width ||
-                     cellPos.Y <= 0 ||
+                     cellPos.Y < 0 ||
                      cellPos.Y >= Height);
         }
 
