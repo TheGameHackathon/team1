@@ -15,18 +15,10 @@ namespace Domain
         public Vector Pos { get; set; }
         public int Value { get; set; }
 
-        public bool TryMerge(Cell other, out Cell result)
-        {
-            result = default;
-            if (Value != other.Value) return false;
+        public bool IsEmpty => Value == 0;
 
-            result = new Cell(Id, Pos, Value + other.Value);
-            return true;
-        }
+        public bool IsMergeableWith(Cell other) => Value == other.Value;
 
-        public bool HasNeighbour(Cell other)
-        {
-            return other.Value != 0;
-        }
+        public bool HasNeighbour(Cell other) => !other.IsEmpty;
     }
 }

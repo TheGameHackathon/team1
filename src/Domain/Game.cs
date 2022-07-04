@@ -21,6 +21,7 @@ namespace Domain
                 throw new Exception("Game is over");
             }
         }
+
         public Game()
         {
         }
@@ -67,12 +68,12 @@ namespace Domain
             for (var x = 0; x < Width; x++)
             {
                 for (var y = 0; y < Height; y++, idCounter++)
-                    result.Add(new Cell(idCounter.ToString(), new Vector{X = x, Y=y}, 0));
+                    result.Add(new Cell(idCounter.ToString(), new Vector(x, y), 0));
             }
 
             return result.ToArray();
         }
-        
+
         private Cell[,] GenerateField(Cell[] cells)
         {
             var generatedField = new Cell[Width, Height];
@@ -100,31 +101,31 @@ namespace Domain
             var dxdy = SetMoveShift(direction);
             var (irange, jrange) = SetForDirection(direction);
 
-            foreach(var i in irange)
+            foreach (var i in irange)
             {
                 foreach (var j in jrange)
                 {
                     var cell = Field[i, j];
 
-                    if (cell.Value == 0) continue;
-                    
-                    while (CanBeMoved(cell, dxdy.X, dxdy.Y))
+                    if (cell.IsEmpty) continue;
+
+                    while (CanBeMoved(cell, dxdy))
                     {
-                        MoveCell(cell, dxdy.X, dxdy.Y);
+                        MoveCell(cell, dxdy);
                         cell = Field[cell.Pos.X + dxdy.X, cell.Pos.Y + dxdy.Y];
                     }
 
-                    if (InBound(new Vector() {X = cell.Pos.X + dxdy.X, Y = cell.Pos.Y + dxdy.Y}) && 
+                    if (InBound(cell.Pos + dxdy) &&
                         cell.HasNeighbour(Field[cell.Pos.X + dxdy.X, cell.Pos.Y + dxdy.Y]))
                     {
                         var rightCell = Field[cell.Pos.X + dxdy.X, cell.Pos.Y + dxdy.Y];
-                        if (cell.TryMerge(rightCell, out var _))
-                        {
-                            rightCell.Value = cell.Value + rightCell.Value;
-                            Score += rightCell.Value;
-                            CheckForWinning(rightCell);
-                            cell.Value = 0;
-                        }
+
+                        if (!cell.IsMergeableWith(rightCell)) continue;
+
+                        rightCell.Value = cell.Value + rightCell.Value;
+                        Score += rightCell.Value;
+                        CheckForWinning(rightCell);
+                        cell.Value = 0;
                     }
                 }
             }
@@ -149,26 +150,20 @@ namespace Domain
                 for (var j = 0; j < Height; j++)
                 {
                     var cell = Field[i, j];
-                    for (var dx = -1; dx <= 1; dx++)
+                    foreach (var directionDelta in VectorExtensions.DirectionDeltas)
                     {
-                        for (var dy = -1; dy <= 1; dy++)
-                        {
-                            if (Math.Abs(dx) == Math.Abs(dy)) continue;
-                            
-                            var neighbourPos = new Vector() {X = cell.Pos.X + dx, Y = cell.Pos.Y + dy};
-                            if (InBound(neighbourPos))
-                            {
-                                var neighbourCell = Field[neighbourPos.X, neighbourPos.Y];
-                                if (!cell.HasNeighbour(neighbourCell))
-                                {
-                                    return false;
-                                }
+                        var neighbourPos = cell.Pos + directionDelta;
+                        if (!InBound(neighbourPos)) continue;
 
-                                if (cell.TryMerge(neighbourCell, out var _))
-                                {
-                                    return false;
-                                }
-                            }
+                        var neighbourCell = Field[neighbourPos.X, neighbourPos.Y];
+                        if (!cell.HasNeighbour(neighbourCell))
+                        {
+                            return false;
+                        }
+
+                        if (cell.IsMergeableWith(neighbourCell))
+                        {
+                            return false;
                         }
                     }
                 }
@@ -176,48 +171,40 @@ namespace Domain
 
             return true;
         }
-        
-        private Vector SetMoveShift(int direction)
-        {
-            return direction switch
-            {
-                37 => new Vector() {X = -1, Y = 0},
-                38 => new Vector() {X = 0, Y = -1},
-                39 => new Vector() {X = 1, Y = 0},
-                40 => new Vector() {X = 0, Y = 1},
-                _ => new Vector() {X = 0, Y = 0}
-            };
-        }
 
-        private (IEnumerable<int>, IEnumerable<int>) SetForDirection(int direction)
-        {
-            return direction switch
-            {  
+        private Vector SetMoveShift(int direction) =>
+            direction switch
+            {
+                37 => new Vector(-1, 0),
+                38 => new Vector(0, -1),
+                39 => new Vector(1, 0),
+                40 => new Vector(0, 1),
+                _ => new Vector(0, 0)
+            };
+
+        private (IEnumerable<int>, IEnumerable<int>) SetForDirection(int direction) =>
+            direction switch
+            {
                 37 => (Enumerable.Range(0, Width), Enumerable.Range(0, Height)),
                 39 => (Enumerable.Range(0, Width).Reverse(), Enumerable.Range(0, Height)),
                 38 => (Enumerable.Range(0, Width), Enumerable.Range(0, Height)),
                 40 => (Enumerable.Range(0, Width), Enumerable.Range(0, Height).Reverse()),
                 _ => (Enumerable.Empty<int>(), Enumerable.Empty<int>())
             };
-        }
-        
-        private bool CanBeMoved(Cell cell, int dx, int dy)
-        {
-            return InBound(new Vector() {X = cell.Pos.X + dx, Y = cell.Pos.Y + dy}) && 
-                     !cell.HasNeighbour(Field[cell.Pos.X + dx, cell.Pos.Y + dy]);
-        }
 
-        private bool InBound(Vector cellPos)
-        {
-            return !(cellPos.X < 0 ||
-                     cellPos.X >= Width ||
-                     cellPos.Y < 0 ||
-                     cellPos.Y >= Height);
-        }
+        private bool CanBeMoved(Cell cell, Vector delta) =>
+            InBound(cell.Pos + delta) &&
+            !cell.HasNeighbour(Field[cell.Pos.X + delta.X, cell.Pos.Y + delta.Y]);
 
-        private void MoveCell(Cell cell, int dx, int dy)
+        private bool InBound(Vector cellPos) =>
+            !(cellPos.X < 0 ||
+              cellPos.X >= Width ||
+              cellPos.Y < 0 ||
+              cellPos.Y >= Height);
+
+        private void MoveCell(Cell cell, Vector delta)
         {
-            var newPos = new Vector() {X = cell.Pos.X + dx, Y = cell.Pos.Y + dy};
+            var newPos = cell.Pos + delta;
             Field[newPos.X, newPos.Y].Value = cell.Value;
             cell.Value = 0;
         }
