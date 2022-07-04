@@ -4,5 +4,6 @@ namespace Domain;
 
 public interface IRandomCellCreator
 {
-    Cell CreateRandomCell(Game game);
+    void CreateAndAddRandomCellToGame(Game game);
+    Vector GetPosOfRandomEmptyCell(Game game);
 }
