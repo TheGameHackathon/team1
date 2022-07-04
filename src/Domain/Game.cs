@@ -15,8 +15,10 @@ namespace Domain
             Id = id;
             IsFinished = isFinished;
             Score = score;
+            Field = GenerateField(cells, width, height);
         }
         public Cell[] Cells { get; set; }
+        public Cell[,] Field { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
         public bool MonitorKeyboard { get; set; }
@@ -24,5 +26,13 @@ namespace Domain
         public Guid Id { get; set; }
         public bool IsFinished { get; set; }
         public int Score { get; set; }
+
+        private Cell[,] GenerateField(Cell[] cells, int width, int height)
+        {
+            var field = new Cell[height, width];
+            foreach (var cell in cells) 
+                field[cell.Pos.X, cell.Pos.Y] = cell;
+            return field;
+        }
     }
 }
