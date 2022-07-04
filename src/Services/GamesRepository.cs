@@ -6,6 +6,7 @@ namespace thegame.Services
 {
     public interface IGamesRepository
     {
+        Game FindGameById(Guid id);
         Game GetOrCreate(Guid id);
         void Update(Game game);
         void Delete(Guid id);
@@ -14,6 +15,11 @@ namespace thegame.Services
     public class GamesRepository : IGamesRepository
     {
         private readonly Dictionary<Guid, Game> entities = new Dictionary<Guid, Game>();
+
+        public Game FindGameById(Guid id)
+        {
+            return entities.TryGetValue(id, out var game) ? game : null;
+        }
 
         public Game GetOrCreate(Guid id)
         {
