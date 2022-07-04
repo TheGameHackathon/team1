@@ -76,7 +76,7 @@ function updateField(game) {
             startgameOverlay.classList.toggle("hidden", !game.isFinished);
             startButton.focus();
         },
-        300);
+        200);
 
     const cells = game.cells;
     const existedCells = {};
