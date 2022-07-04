@@ -9,20 +9,19 @@ namespace Domain
     {
         public void SetUp()
         {
-            var generator = new RandomCellCreator();
             Field = GenerateField(GenerateOneDimensionalField());
 
             try
             {
-                generator.CreateAndAddRandomCellToGame(this);
-                generator.CreateAndAddRandomCellToGame(this);
+                randomCellCreator.CreateAndAddRandomCellToGame(this);
+                randomCellCreator.CreateAndAddRandomCellToGame(this);
             }
             catch (Exception e)
             {
                 throw new Exception("Game is over");
             }
         }
-        public Game() : this(4, 4, Guid.NewGuid())
+        public Game()
         {
         }
 
@@ -32,7 +31,7 @@ namespace Domain
 
         public Game(int width, int height, Guid id)
         {
-            MonitorKeyboard = false;
+            MonitorKeyboard = true;
             MonitorMouseClicks = false;
             Width = width;
             Height = height;
@@ -58,6 +57,8 @@ namespace Domain
         public int Score { get; set; }
 
         public Cell[,] Field { get; set; }
+
+        private readonly IRandomCellCreator randomCellCreator = new RandomCellCreator();
 
         private Cell[] GenerateOneDimensionalField()
         {
@@ -98,13 +99,15 @@ namespace Domain
         {
             var dxdy = SetMoveShift(direction);
             var (irange, jrange) = SetForDirection(direction);
-            
+
             foreach(var i in irange)
             {
                 foreach (var j in jrange)
                 {
                     var cell = Field[i, j];
 
+                    if (cell.Value == 0) continue;
+                    
                     while (CanBeMoved(cell, dxdy.X, dxdy.Y))
                     {
                         MoveCell(cell, dxdy.X, dxdy.Y);
@@ -118,21 +121,62 @@ namespace Domain
                         if (cell.TryMerge(rightCell, out var _))
                         {
                             rightCell.Value = cell.Value + rightCell.Value;
+                            Score += rightCell.Value;
+                            CheckForWinning(rightCell);
                             cell.Value = 0;
                         }
                     }
                 }
             }
+
+            IsFinished = IsLose();
+            if (!IsFinished && !(dxdy.X == 0 && dxdy.Y == 0))
+                randomCellCreator.CreateAndAddRandomCellToGame(this);
         }
 
+        private void CheckForWinning(Cell cell)
+        {
+            if (cell.Value == 2048)
+            {
+                IsFinished = true;
+            }
+        }
+
+        private bool IsLose()
+        {
+            for (var i = 0; i < Width; i++)
+            {
+                for (var j = 0; j < Height; j++)
+                {
+                    var cell = Field[i, j];
+                    for (var dx = -1; dx <= 1; dx++)
+                    {
+                        for (var dy = -1; dy <= 1; dy++)
+                        {
+                            if (dx == dy) continue;
+                            var neighbourPos = new Vector() {X = cell.Pos.X + dx, Y = cell.Pos.Y + dy};
+                            if (InBound(neighbourPos))
+                            {
+                                var neighbourCell = Field[neighbourPos.X, neighbourPos.Y];
+                                if (!cell.HasNeighbour(neighbourCell)) return false;
+                                if (cell.TryMerge(neighbourCell, out var _)) return false;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+        
         private Vector SetMoveShift(int direction)
         {
             return direction switch
             {
                 37 => new Vector() {X = -1, Y = 0},
-                38 => new Vector() {X = 0, Y = 1},
+                38 => new Vector() {X = 0, Y = -1},
                 39 => new Vector() {X = 1, Y = 0},
-                40 => new Vector() {X = 0, Y = -1},
+                40 => new Vector() {X = 0, Y = 1},
                 _ => new Vector() {X = 0, Y = 0}
             };
         }
@@ -141,25 +185,26 @@ namespace Domain
         {
             return direction switch
             {
-                37 => (Enumerable.Range(0, Width - 1), Enumerable.Range(0, Height - 1)),
-                39 => (Enumerable.Range(Width - 1, 0), Enumerable.Range(0, Height - 1)),
-                38 => (Enumerable.Range(0, Width - 1), Enumerable.Range(0, Height - 1)),
-                40 => (Enumerable.Range(0, Width - 1), Enumerable.Range(Height - 1, 0)),
+                
+                37 => (Enumerable.Range(0, Width), Enumerable.Range(0, Height)),
+                39 => (Enumerable.Range(0, Width).Reverse(), Enumerable.Range(0, Height)),
+                38 => (Enumerable.Range(0, Width), Enumerable.Range(0, Height)),
+                40 => (Enumerable.Range(0, Width), Enumerable.Range(0, Height).Reverse()),
                 _ => (Enumerable.Empty<int>(), Enumerable.Empty<int>())
             };
         }
         
         private bool CanBeMoved(Cell cell, int dx, int dy)
         {
-            return !(InBound(new Vector() {X = cell.Pos.X + dx, Y = cell.Pos.Y + dy}) || 
-                     cell.HasNeighbour(Field[cell.Pos.X + dx, cell.Pos.Y + dy]));
+            return InBound(new Vector() {X = cell.Pos.X + dx, Y = cell.Pos.Y + dy}) && 
+                     !cell.HasNeighbour(Field[cell.Pos.X + dx, cell.Pos.Y + dy]);
         }
 
         private bool InBound(Vector cellPos)
         {
             return !(cellPos.X < 0 ||
                      cellPos.X >= Width ||
-                     cellPos.Y <= 0 ||
+                     cellPos.Y < 0 ||
                      cellPos.Y >= Height);
         }
 

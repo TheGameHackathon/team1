@@ -16,7 +16,7 @@ namespace Domain
             var newCellPos = GetPosOfRandomEmptyCell(game);
 
             if (newCellPos == null)
-                throw new Exception("Game is over! No empty cells");
+                return;
 
             var random = new Random();
             var newContent = random.Next(1, 6) > 1 ? 2 : 4;

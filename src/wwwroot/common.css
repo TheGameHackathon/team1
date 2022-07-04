@@ -1,6 +1,6 @@
 ﻿body {
     background-color: black;
-    color: green;
+    color: white;
     font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
 }
 
@@ -67,7 +67,7 @@
     justify-content: center;
     align-items: center;
     font-size: 60pt;
-    color: green;
+    color: white;
 }
 
 .mainButtonContainer {
@@ -85,23 +85,52 @@
 }
 
 
-.color0 {
-    background-color: blue;
-}
-
-.color1 {
-    background-color: red;
-}
-
 .color2 {
-    background-color: green;
-}
-
-.color3 {
-    background-color: cyan;
+    background-color: #E6D1F2;
 }
 
 .color4 {
-    background-color: magenta;
+    background-color: #D9C4EC;
 }
 
+.color8 {
+    background-color: #CCB7E5;
+}
+
+.color16 {
+    background-color: #BEA9DF;
+}
+
+.color32 {
+    background-color: #B19CD8;
+}
+
+.color64 {
+    background-color: #9f87ca;
+}
+
+.color128 {
+    background-color: #8269b1;
+}
+
+.color256 {
+    background-color: #6f53a4;
+}
+
+.color1024 {
+    background-color: #5d3e97;
+}
+
+.color2048 {
+    background-color: #5023a2;
+}
+
+.color0 {
+    /*background-color: #f2edf5;*/
+    background-color: black;
+}
+
+.cell {
+    color: white;
+    font-size: 35px;
+}
