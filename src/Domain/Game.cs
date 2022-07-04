@@ -47,7 +47,7 @@ namespace Domain
 
         public void MoveCells(int direction)
         {
-            foreach (var cell in Cells)
+            foreach (var cell in Field)
             {
                 switch (direction)
                 {

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using AutoMapper;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 using thegame.Models;
@@ -12,10 +13,12 @@ namespace thegame.Controllers
     public class MovesController : Controller
     {
         private IGamesRepository _gamesRepository;
-        public MovesController(IGamesRepository gamesRepository)
+        private IMapper _mapper;
+        public MovesController(IGamesRepository gamesRepository, IMapper mapper)
         {
             _gamesRepository = gamesRepository;
-        }
+            _mapper = mapper;
+        } 
         
         [HttpPost]
         public IActionResult Moves(Guid gameId, [FromBody] UserInputDto userInput)
@@ -23,15 +26,17 @@ namespace thegame.Controllers
             if (gameId == Guid.Empty)
                 return BadRequest();
 
-            var currentGameState = _gamesRepository.FindGameById(gameId);
+            var gameEnity = _gamesRepository.FindGameById(gameId);
 
-            if (currentGameState is null)
+            if (gameEnity is null)
                 return NotFound();
 
-            currentGameState.MoveCells(userInput.KeyPressed);
-            _gamesRepository.Update(currentGameState);
+            gameEnity.MoveCells(userInput.KeyPressed);
+            _gamesRepository.Update(gameEnity);
+
+            var gameDto = _mapper.Map<GameDto>(gameEnity);
             
-            return Ok(currentGameState);
+            return Ok(gameDto);
         }
     }
 }
