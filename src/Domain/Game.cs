@@ -21,13 +21,13 @@ namespace Domain
             Id = id;
             IsFinished = false;
             Score = 0;
-            field = new Cell[height, width];
+            Field = new Cell[height, width];
         }
 
         public Cell[] Cells
         {
             get => GetCells();
-            set => field = GenerateField(value, Width, Height);
+            set => Field = GenerateField(value, Width, Height);
         }
 
         public int Width { get; set; }
@@ -38,7 +38,7 @@ namespace Domain
         public bool IsFinished { get; set; }
         public int Score { get; set; }
 
-        private Cell[,] field;
+        public Cell[,] Field { get; set; }
 
         private Cell[,] GenerateField(Cell[] cells, int width, int height)
         {
@@ -50,12 +50,12 @@ namespace Domain
 
         private Cell[] GetCells()
         {
-            var cells = new Cell[field.Length];
+            var cells = new Cell[Field.Length];
             for (var x = 0; x < Width; x++)
             {
                 for (var y = 0; y < Height; y++)
                 {
-                    cells[x * Width + y] = field[x, y];
+                    cells[x * Width + y] = Field[x, y];
                 }
             }
 
