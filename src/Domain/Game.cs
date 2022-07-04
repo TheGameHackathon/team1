@@ -1,9 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Domain
 {
     public class Game
     {
+        public void SetUp(IRandomCellCreator generator)
+        {
+            Field = GenerateField(GenerateOneDimensionalField());
+
+            try
+            {
+                generator.CreateAndAddRandomCellToGame(this);
+                generator.CreateAndAddRandomCellToGame(this);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Game is over");
+            }
+        }
         public Game() : this(4, 4, Guid.NewGuid())
         {
         }
@@ -21,13 +36,13 @@ namespace Domain
             Id = id;
             IsFinished = false;
             Score = 0;
-            Field = new Cell[height, width];
+            Field = null;
         }
 
         public Cell[] Cells
         {
             get => GetCells();
-            set => Field = GenerateField(value, Width, Height);
+            set => Field = GenerateField(value);
         }
 
         public int Width { get; set; }
@@ -40,9 +55,22 @@ namespace Domain
 
         public Cell[,] Field { get; set; }
 
-        private Cell[,] GenerateField(Cell[] cells, int width, int height)
+        private Cell[] GenerateOneDimensionalField()
         {
-            var generatedField = new Cell[width, height];
+            var result = new List<Cell>();
+            var idCounter = 0;
+            for (var x = 0; x < Width; x++)
+            {
+                for (var y = 0; y < Height; y++, idCounter++)
+                    result.Add(new Cell(idCounter.ToString(), new Vector{X = x, Y=y}, 0));
+            }
+
+            return result.ToArray();
+        }
+        
+        private Cell[,] GenerateField(Cell[] cells)
+        {
+            var generatedField = new Cell[Width, Height];
             foreach (var cell in cells)
                 generatedField[cell.Pos.X, cell.Pos.Y] = cell;
             return generatedField;
