@@ -7,7 +7,7 @@ namespace thegame.Services
     public interface IGamesRepository
     {
         Game FindGameById(Guid id);
-        Game GetOrCreate(Guid id);
+        Game GetOrCreate(Guid id, int width, int height);
         void Update(Game game);
         void Delete(Guid id);
     }
@@ -21,14 +21,15 @@ namespace thegame.Services
             return entities.TryGetValue(id, out var game) ? game : null;
         }
 
-        public Game GetOrCreate(Guid id)
+        public Game GetOrCreate(Guid id, int width, int height)
         {
             if (entities.TryGetValue(id, out var game))
             {
                 return Clone(id, game);
             }
 
-            var entity = new Game(id);
+            var entity = new Game(Guid.NewGuid(), width, height);
+
             entities[entity.Id] = entity;
             return Clone(id, entity);
         }

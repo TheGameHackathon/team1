@@ -19,9 +19,9 @@ namespace thegame.Controllers
         }
         
         [HttpPost]
-        public IActionResult Index()
+        public IActionResult Index([FromBody] SizeToPostDto sizeToPostDto)
         {
-            var game = gamesRepository.GetOrCreate(Guid.NewGuid());
+            var game = gamesRepository.GetOrCreate(Guid.NewGuid(), sizeToPostDto.Size, sizeToPostDto.Size);
             var gameDto = mapper.Map<GameDto>(game);
             return Ok(gameDto);
         }
