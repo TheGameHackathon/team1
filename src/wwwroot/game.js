@@ -67,6 +67,10 @@ function updateField(game) {
         scoreElement.innerText = `Your score: ${game.score}`;
         startMessage.innerText = `Your score: ${game.score}. Again?`;
     }
+    if (game.isFinished){
+        window.open("https://www.youtube.com/watch?v=LbOve_UZZ54");
+    }
+    
     setTimeout(
         () => {
             startgameOverlay.classList.toggle("hidden", !game.isFinished);
