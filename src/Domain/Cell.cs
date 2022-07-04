@@ -2,16 +2,24 @@
 {
     public class Cell
     {
-        public Cell(string id, Vector pos, string type, string content)
+        public Cell(string id, Vector pos, int value)
         {
             Id = id;
             Pos = pos;
-            Type = type;
-            Content = content;
+            Value = value;
         }
+
         public string Id { get; set; }
         public Vector Pos { get; set; }
-        public string Type { get; set; }
-        public string Content { get; set; }
+        public int Value { get; set; }
+
+        public bool TryMerge(Cell other, out Cell result)
+        {
+            result = default;
+            if (Value != other.Value) return false;
+
+            result = new Cell(Id, Pos, Value + other.Value);
+            return true;
+        }
     }
 }
