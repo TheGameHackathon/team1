@@ -153,13 +153,21 @@ namespace Domain
                     {
                         for (var dy = -1; dy <= 1; dy++)
                         {
-                            if (dx == dy) continue;
+                            if (Math.Abs(dx) == Math.Abs(dy)) continue;
+                            
                             var neighbourPos = new Vector() {X = cell.Pos.X + dx, Y = cell.Pos.Y + dy};
                             if (InBound(neighbourPos))
                             {
                                 var neighbourCell = Field[neighbourPos.X, neighbourPos.Y];
-                                if (!cell.HasNeighbour(neighbourCell)) return false;
-                                if (cell.TryMerge(neighbourCell, out var _)) return false;
+                                if (!cell.HasNeighbour(neighbourCell))
+                                {
+                                    return false;
+                                }
+
+                                if (cell.TryMerge(neighbourCell, out var _))
+                                {
+                                    return false;
+                                }
                             }
                         }
                     }
