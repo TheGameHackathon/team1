@@ -99,7 +99,7 @@ namespace Domain
         {
             var dxdy = SetMoveShift(direction);
             var (irange, jrange) = SetForDirection(direction);
-            
+
             foreach(var i in irange)
             {
                 foreach (var j in jrange)
@@ -121,14 +121,54 @@ namespace Domain
                         if (cell.TryMerge(rightCell, out var _))
                         {
                             rightCell.Value = cell.Value + rightCell.Value;
+                            Score += rightCell.Value;
+                            CheckForWinning(rightCell);
                             cell.Value = 0;
                         }
                     }
                 }
             }
-            randomCellCreator.CreateAndAddRandomCellToGame(this);
+
+            IsFinished = IsLose();
+            if (!IsFinished)
+                randomCellCreator.CreateAndAddRandomCellToGame(this);
         }
 
+        private void CheckForWinning(Cell cell)
+        {
+            if (cell.Value == 2048)
+            {
+                IsFinished = true;
+            }
+        }
+
+        private bool IsLose()
+        {
+            for (var i = 0; i < Width; i++)
+            {
+                for (var j = 0; j < Height; j++)
+                {
+                    var cell = Field[i, j];
+                    for (var dx = -1; dx <= 1; dx++)
+                    {
+                        for (var dy = -1; dy <= 1; dy++)
+                        {
+                            if (dx == dy) continue;
+                            var neighbourPos = new Vector() {X = cell.Pos.X + dx, Y = cell.Pos.Y + dy};
+                            if (InBound(neighbourPos))
+                            {
+                                var neighbourCell = Field[neighbourPos.X, neighbourPos.Y];
+                                if (!cell.HasNeighbour(neighbourCell)) return false;
+                                if (cell.TryMerge(neighbourCell, out var _)) return false;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+        
         private Vector SetMoveShift(int direction)
         {
             return direction switch
