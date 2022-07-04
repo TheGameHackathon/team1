@@ -3,7 +3,7 @@
     public class StupidBot : IBot
     {
         private uint pointer;
-        private int[] arrCommands = {37, 38, 39, 40};
+        private readonly int[] arrCommands = {37, 38, 39, 40};
 
         public void MakeStep(Game currentGame)
         {
