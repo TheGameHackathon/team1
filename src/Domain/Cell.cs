@@ -1,4 +1,6 @@
-﻿namespace Domain
+﻿using thegame.Models;
+
+namespace Domain
 {
     public class Cell
     {
@@ -20,6 +22,11 @@
 
             result = new Cell(Id, Pos, Value + other.Value);
             return true;
+        }
+
+        public bool HasNeighbour(Cell other)
+        {
+            return other.Value != 0;
         }
     }
 }
