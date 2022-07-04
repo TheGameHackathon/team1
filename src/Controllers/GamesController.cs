@@ -21,6 +21,8 @@ namespace thegame.Controllers
         [HttpPost]
         public IActionResult Index([FromBody] SizeToPostDto sizeToPostDto)
         {
+            if (sizeToPostDto.Size is > 20 or < 2)
+                return UnprocessableEntity("Wrong size");
             var game = gamesRepository.GetOrCreate(Guid.NewGuid(), sizeToPostDto.Size, sizeToPostDto.Size);
             var gameDto = mapper.Map<GameDto>(game);
             return Ok(gameDto);
