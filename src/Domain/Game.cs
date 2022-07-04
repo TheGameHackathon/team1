@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using thegame.Controllers;
 
 namespace Domain
 {
@@ -94,29 +95,78 @@ namespace Domain
 
         public void MoveCells(int direction)
         {
-            foreach (var cell in Cells)
+            var dxdy = SetMoveShift(direction);
+            var (irange, jrange) = SetForDirection(direction);
+            
+            foreach(var i in irange)
             {
-                switch (direction)
+                foreach (var j in jrange)
                 {
-                    case 37:
-                        MoveCell(cell, -1, 0);
-                        break;
-                    case 38:
-                        MoveCell(cell, 0, 1);
-                        break;
-                    case 39:
-                        MoveCell(cell, 1, 0);
-                        break;
-                    case 40:
-                        MoveCell(cell, 0, -1);
-                        break;
+                    var cell = Field[i, j];
+
+                    while (CanBeMoved(cell, dxdy.X, dxdy.Y))
+                    {
+                        MoveCell(cell, dxdy.X, dxdy.Y);
+                        cell = Field[cell.Pos.X + dxdy.X, cell.Pos.Y + dxdy.Y];
+                    }
+
+                    if (InBound(new Vector() {X = cell.Pos.X + dxdy.X, Y = cell.Pos.Y + dxdy.Y}) && 
+                        cell.HasNeighbour(Field[cell.Pos.X + dxdy.X, cell.Pos.Y + dxdy.Y]))
+                    {
+                        var rightCell = Field[cell.Pos.X + dxdy.X, cell.Pos.Y + dxdy.Y];
+                        if (cell.TryMerge(rightCell, out var _))
+                        {
+                            rightCell.Value = cell.Value + rightCell.Value;
+                            cell.Value = 0;
+                        }
+                    }
                 }
             }
         }
 
+        private Vector SetMoveShift(int direction)
+        {
+            return direction switch
+            {
+                37 => new Vector() {X = -1, Y = 0},
+                38 => new Vector() {X = 0, Y = 1},
+                39 => new Vector() {X = 1, Y = 0},
+                40 => new Vector() {X = 0, Y = -1},
+                _ => new Vector() {X = 0, Y = 0}
+            };
+        }
+
+        private (IEnumerable<int>, IEnumerable<int>) SetForDirection(int direction)
+        {
+            return direction switch
+            {
+                37 => (Enumerable.Range(0, Width - 1), Enumerable.Range(0, Height - 1)),
+                39 => (Enumerable.Range(Width - 1, 0), Enumerable.Range(0, Height - 1)),
+                38 => (Enumerable.Range(0, Width - 1), Enumerable.Range(0, Height - 1)),
+                40 => (Enumerable.Range(0, Width - 1), Enumerable.Range(Height - 1, 0)),
+                _ => (Enumerable.Empty<int>(), Enumerable.Empty<int>())
+            };
+        }
+        
+        private bool CanBeMoved(Cell cell, int dx, int dy)
+        {
+            return !(InBound(new Vector() {X = cell.Pos.X + dx, Y = cell.Pos.Y + dy}) || 
+                     cell.HasNeighbour(Field[cell.Pos.X + dx, cell.Pos.Y + dy]));
+        }
+
+        private bool InBound(Vector cellPos)
+        {
+            return !(cellPos.X < 0 ||
+                     cellPos.X >= Width ||
+                     cellPos.Y <= 0 ||
+                     cellPos.Y >= Height);
+        }
+
         private void MoveCell(Cell cell, int dx, int dy)
         {
-            cell.Pos = new Vector() {X = cell.Pos.X + dx, Y = cell.Pos.Y + dy};
+            var newPos = new Vector() {X = cell.Pos.X + dx, Y = cell.Pos.Y + dy};
+            Field[newPos.X, newPos.Y].Value = cell.Value;
+            cell.Value = 0;
         }
     }
 }
