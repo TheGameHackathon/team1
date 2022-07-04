@@ -4,31 +4,32 @@ namespace Domain
 {
     public class Game
     {
-        public Game()
+        public Game() : this(4, 4, Guid.NewGuid())
         {
-            
         }
-        
-        public Game(Guid id)
+
+        public Game(Guid id) : this(4, 4, id)
         {
-            Id = id;
         }
-        
-        public Game(Cell[] cells, int width, int height, Guid id,
-            bool isFinished, int score)
+
+        public Game(int width, int height, Guid id)
         {
-            Cells = cells;
             MonitorKeyboard = false;
             MonitorMouseClicks = false;
             Width = width;
             Height = height;
             Id = id;
-            IsFinished = isFinished;
-            Score = score;
-            Field = GenerateField(cells, width, height);
+            IsFinished = false;
+            Score = 0;
+            field = new Cell[height, width];
         }
-        public Cell[] Cells { get; set; }
-        public Cell[,] Field { get; set; }
+
+        public Cell[] Cells
+        {
+            get => GetCells();
+            set => field = GenerateField(value, Width, Height);
+        }
+
         public int Width { get; set; }
         public int Height { get; set; }
         public bool MonitorKeyboard { get; set; }
@@ -37,12 +38,28 @@ namespace Domain
         public bool IsFinished { get; set; }
         public int Score { get; set; }
 
+        private Cell[,] field;
+
         private Cell[,] GenerateField(Cell[] cells, int width, int height)
         {
-            var field = new Cell[height, width];
+            var generatedField = new Cell[width, height];
             foreach (var cell in cells)
-                field[cell.Pos.X, cell.Pos.Y] = cell;
-            return field;
+                generatedField[cell.Pos.X, cell.Pos.Y] = cell;
+            return generatedField;
+        }
+
+        private Cell[] GetCells()
+        {
+            var cells = new Cell[field.Length];
+            for (var x = 0; x < Width; x++)
+            {
+                for (var y = 0; y < Height; y++)
+                {
+                    cells[x * Width + y] = field[x, y];
+                }
+            }
+
+            return cells;
         }
 
         public void MoveCells(int direction)
@@ -66,7 +83,7 @@ namespace Domain
                 }
             }
         }
-        
+
         private void MoveCell(Cell cell, int dx, int dy)
         {
             cell.Pos = new Vector() {X = cell.Pos.X + dx, Y = cell.Pos.Y + dy};

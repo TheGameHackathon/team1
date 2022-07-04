@@ -50,11 +50,12 @@ namespace thegame.Services
         {
             return new Game
             {
-                Id = id, Cells = game.Cells,
+                Id = id,
                 MonitorKeyboard = game.MonitorKeyboard,
                 MonitorMouseClicks = game.MonitorMouseClicks,
                 Width = game.Width,
                 Height = game.Height,
+                Cells = game.Cells,
                 IsFinished = game.IsFinished,
                 Score = game.Score
             };
