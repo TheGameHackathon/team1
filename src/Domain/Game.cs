@@ -26,7 +26,7 @@ namespace Domain
         {
         }
 
-        public Game(Guid id) : this(4, 4, id)
+        public Game(Guid id, int width, int height) : this(width, height, id)
         {
         }
 
