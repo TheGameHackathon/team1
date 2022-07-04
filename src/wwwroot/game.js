@@ -14,8 +14,14 @@ function handleApiErrors(result) {
     return result.json();
 }
 
-async function startGame() {
-    game = await fetch("/api/games", { method: "POST" })
+async function startGame(size) {
+    game = await fetch("/api/games", 
+        { 
+            method: "POST", 
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({size: size}) })
         .then(handleApiErrors);
     window.history.replaceState(game.id, "The Game", "/" + game.id);
     renderField(game);
@@ -147,7 +153,8 @@ function initializePage() {
     // use gameId if you want
     startButton.addEventListener("click", e => {
         startgameOverlay.classList.toggle("hidden", true);
-        startGame();
+        const size = document.getElementById("size").value;
+        startGame(size);
     });
     addKeyboardListener();
     addResizeListener();
