@@ -4,6 +4,16 @@ namespace Domain
 {
     public class Game
     {
+        public Game()
+        {
+            
+        }
+        
+        public Game(Guid id)
+        {
+            Id = id;
+        }
+        
         public Game(Cell[] cells, int width, int height, Guid id,
             bool isFinished, int score)
         {

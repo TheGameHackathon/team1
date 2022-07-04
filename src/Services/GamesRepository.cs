@@ -14,6 +14,7 @@ namespace thegame.Services
     public class GamesRepository : IGamesRepository
     {
         private readonly Dictionary<Guid, Game> entities = new Dictionary<Guid, Game>();
+
         public Game GetOrCreate(Guid id)
         {
             if (entities.TryGetValue(id, out var game))
@@ -21,8 +22,8 @@ namespace thegame.Services
                 return Clone(id, game);
             }
 
-            var entity = new Game(); //TODO
-            entities[id] = entity; //TODO
+            var entity = new Game(Guid.NewGuid());
+            entities[entity.Id] = entity;
             return Clone(id, entity);
         }
 
@@ -41,7 +42,16 @@ namespace thegame.Services
 
         private Game Clone(Guid id, Game game)
         {
-            return new Game(); // TODO
+            return new Game
+            {
+                Id = id, Cells = game.Cells,
+                MonitorKeyboard = game.MonitorKeyboard,
+                MonitorMouseClicks = game.MonitorMouseClicks,
+                Width = game.Width,
+                Height = game.Height,
+                IsFinished = game.IsFinished,
+                Score = game.Score
+            };
         }
     }
 }
