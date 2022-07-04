@@ -1,5 +1,7 @@
-namespace thegame.Services;
-
-public class GamesRepository
+namespace thegame.Services
 {
+
+    public class GamesRepository
+    {
+    }
 }

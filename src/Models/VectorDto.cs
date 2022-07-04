@@ -1,7 +1,9 @@
-namespace thegame.Models;
-
-public class VectorDto
+namespace thegame.Models
 {
-    public int X { get; set; }
-    public int Y { get; set; }
+
+    public class VectorDto
+    {
+        public int X { get; set; }
+        public int Y { get; set; }
+    }
 }
