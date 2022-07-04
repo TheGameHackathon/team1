@@ -9,13 +9,12 @@ namespace Domain
     {
         public void SetUp()
         {
-            var generator = new RandomCellCreator();
             Field = GenerateField(GenerateOneDimensionalField());
 
             try
             {
-                generator.CreateAndAddRandomCellToGame(this);
-                generator.CreateAndAddRandomCellToGame(this);
+                randomCellCreator.CreateAndAddRandomCellToGame(this);
+                randomCellCreator.CreateAndAddRandomCellToGame(this);
             }
             catch (Exception e)
             {
@@ -58,6 +57,8 @@ namespace Domain
         public int Score { get; set; }
 
         public Cell[,] Field { get; set; }
+
+        private readonly IRandomCellCreator randomCellCreator = new RandomCellCreator();
 
         private Cell[] GenerateOneDimensionalField()
         {
@@ -123,6 +124,7 @@ namespace Domain
                     }
                 }
             }
+            randomCellCreator.CreateAndAddRandomCellToGame(this);
         }
 
         private Vector SetMoveShift(int direction)
