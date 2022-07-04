@@ -14,10 +14,13 @@ namespace thegame.Controllers
     {
         private IGamesRepository _gamesRepository;
         private IMapper _mapper;
-        public MovesController(IGamesRepository gamesRepository, IMapper mapper)
+        private readonly IBot _bot;
+
+        public MovesController(IGamesRepository gamesRepository, IMapper mapper, IBot bot)
         {
             _gamesRepository = gamesRepository;
             _mapper = mapper;
+            _bot = bot;
         } 
         
         [HttpPost]
@@ -31,7 +34,10 @@ namespace thegame.Controllers
             if (gameEntity is null)
                 return NotFound();
 
-            gameEntity.MoveCells(userInput.keyPressed);
+            if (userInput.keyPressed == 'I')
+                _bot.MakeStep(gameEntity);
+            else
+                gameEntity.MoveCells(userInput.keyPressed);
             _gamesRepository.Update(gameEntity);
 
             var gameDto = _mapper.Map<GameDto>(gameEntity);

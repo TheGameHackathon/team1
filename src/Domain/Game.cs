@@ -142,8 +142,7 @@ namespace Domain
         private (IEnumerable<int>, IEnumerable<int>) SetForDirection(int direction)
         {
             return direction switch
-            {
-                
+            {  
                 37 => (Enumerable.Range(0, Width), Enumerable.Range(0, Height)),
                 39 => (Enumerable.Range(0, Width).Reverse(), Enumerable.Range(0, Height)),
                 38 => (Enumerable.Range(0, Width), Enumerable.Range(0, Height)),
