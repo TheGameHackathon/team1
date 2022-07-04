@@ -126,7 +126,8 @@
 }
 
 .color0 {
-    background-color: #f2edf5;
+    /*background-color: #f2edf5;*/
+    background-color: black;
 }
 
 .cell {

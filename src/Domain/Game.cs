@@ -130,7 +130,7 @@ namespace Domain
             }
 
             IsFinished = IsLose();
-            if (!IsFinished)
+            if (!IsFinished && !(dxdy.X == 0 && dxdy.Y == 0))
                 randomCellCreator.CreateAndAddRandomCellToGame(this);
         }
 
